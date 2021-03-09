@@ -49,8 +49,8 @@ Identificação de aplicativo:
 Evento Listener:
 
 ```javascript
- const calendarManagerEmitter = new NativeEventEmitter(PlugPagService);
- const subscription = calendarManagerEmitter.addListener(
+ const eventPaymentsManagerEmitter = new NativeEventEmitter(PlugPagService);
+ const event = eventPaymentsManagerEmitter.addListener(
     'eventPayments',
     (reminder) => console.log(reminder)
   );
