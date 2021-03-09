@@ -84,7 +84,3 @@ Inicializar e ativar o Pin pad:
 
   }
 ```
-
-## License
-
-MIT
