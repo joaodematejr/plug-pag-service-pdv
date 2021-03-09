@@ -13,14 +13,14 @@ plug-pag-service-pdv requer [Node.js](https://nodejs.org/) ou [Yarn](https://yar
 
 Instale a dependências.
 
+```sh
+npm install plug-pag-service-pdv ou yarn add npm plug-pag-service-pdv
+```
+
 ## Importação
 
 ```javascript
 import PlugPagService from 'plug-pag-service-pdv';
-```
-
-```sh
-npm install plug-pag-service-pdv ou yarn add npm plug-pag-service-pdv
 ```
 
 ## Exemplos
@@ -84,3 +84,7 @@ Inicializar e ativar o Pin pad:
 
   }
 ```
+
+## License
+
+MIT
