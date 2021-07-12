@@ -1,9 +1,8 @@
 package com.reactlibrary;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
+import android.widget.Toast;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
@@ -17,6 +16,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -107,15 +110,11 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
         constants.put("OPERATION_QUERY_LAST_APPROVED_TRANSACTION", PlugPag.OPERATION_QUERY_LAST_APPROVED_TRANSACTION);
         constants.put("OPERATION_REFUND", PlugPag.OPERATION_REFUND);
         constants.put("OPERATION_REPRINT_CUSTOMER_RECEIPT", PlugPag.OPERATION_REPRINT_CUSTOMER_RECEIPT);
-        constants.put("OPERATION_REPRINT_STABLISHMENT_RECEIPT", PlugPag.OPERATION_REPRINT_STABLISHMENT_RECEIPT);
-
         constants.put("ACTION_POST_OPERATION", PlugPag.ACTION_POST_OPERATION);
         constants.put("ACTION_PRE_OPERATION", PlugPag.ACTION_PRE_OPERATION);
         constants.put("ACTION_UPDATE", PlugPag.ACTION_UPDATE);
-
         constants.put("APN_SERVICE_CLASS_NAME", PlugPag.APN_SERVICE_CLASS_NAME);
         constants.put("APN_SERVICE_PACKAGE_NAME", PlugPag.APN_SERVICE_PACKAGE_NAME);
-
         constants.put("AUTHENTICATION_FAILED", PlugPag.AUTHENTICATION_FAILED);
         constants.put("COMMUNICATION_ERROR", PlugPag.COMMUNICATION_ERROR);
         constants.put("ERROR_CODE_OK", PlugPag.ERROR_CODE_OK);
@@ -151,6 +150,7 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
         appIdentification = new PlugPagAppIdentification(name, version);
         plugPag = new PlugPag(reactContext, appIdentification);
     }
+    
 
     // Ativa terminal e faz o pagamento
     @ReactMethod
@@ -207,7 +207,18 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
                     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
                 } else if (code == PlugPagEventData.EVENT_CODE_SALE_NOT_APPROVED) {
                     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
-
+                } else if (code == PlugPagEventData.EVENT_CODE_AUTHORIZING) {
+                    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
+                } else if (code == PlugPagEventData.EVENT_CODE_INSERTED_CARD) {
+                    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
+                } else if (code == PlugPagEventData.EVENT_CODE_SALE_END) {
+                    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
+                } else if (code == PlugPagEventData.EVENT_CODE_WAITING_REMOVE_CARD) {
+                    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
+                } else if (code == PlugPagEventData.EVENT_CODE_DEFAULT) {
+                    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
+                } else if (code == PlugPagEventData.ON_EVENT_ERROR) {
+                    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", messageCard);
                 } else if (plugPagEventData.getEventCode() == PlugPagEventData.EVENT_CODE_DIGIT_PASSWORD || plugPagEventData.getEventCode() == PlugPagEventData.EVENT_CODE_NO_PASSWORD) {
                     if (plugPagEventData.getEventCode() == PlugPagEventData.EVENT_CODE_DIGIT_PASSWORD) {
                         countPassword++;
@@ -230,7 +241,6 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
                     } else if (countPassword == 6 || countPassword > 6) {
                         getPassword = "Senha: ******";
                     }
-
                     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("eventPayments", getPassword);
                 }
             }
@@ -246,6 +256,15 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
                 map.putInt("retCode", transactionResult.getResult());
                 map.putString("transactionCode", transactionResult.getTransactionCode());
                 map.putString("transactionId", transactionResult.getTransactionId());
+                map.putString("message", transactionResult.getMessage());
+
+                map.putInt("code", transactionResult.getResult());
+                map.putString("amount", transactionResult.getAmount());
+                map.putString("bin", transactionResult.getBin());
+                map.putString("cardApplication", transactionResult.getCardApplication());
+                map.putString("cardBrand", transactionResult.getCardBrand());
+                map.putString("errorCode", transactionResult.getErrorCode());
+
                 promise.resolve(map);
             }
         };
@@ -367,14 +386,14 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
             public void run() {
                 setAppIdendification("pdv365", "0.0.1");
                 countPrint = 0;
-                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/print");
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/");
                 File[] arquivos = file.listFiles();
                 countImages = arquivos.length;
 
 
                 for (File fileTmp : arquivos) {
 
-                    final PlugPagPrinterData data = new PlugPagPrinterData( Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/print/" + fileTmp.getName(), 4, 10 * 12);
+                    final PlugPagPrinterData data = new PlugPagPrinterData( Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/" + fileTmp.getName(), 4, 10 * 12);
 
                     PlugPagPrinterListener listener = new PlugPagPrinterListener() {
                         @Override
@@ -415,4 +434,30 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
 
         sendEvent(reactContext, "connectionEvent", isConnected);
     }
+
+    @ReactMethod
+    public void cancelReadCard(Promise promise) {
+        PlugPagNFCResult result =  plugPag.abortNFC();
+
+        if (result.getResult() == -1) {
+            promise.reject(null, "Não foi possível cancelar a operação.");
+        } else {
+            promise.resolve(null);
+        }
+    }
+
+    // Calcular parcelas
+    @ReactMethod
+    public void calculateInstallments(String saleValue, final Promise promise) {
+        try {
+            setAppIdendification("pdv365", "0.0.1");
+            String[] installments = plugPag.calculateInstallments(saleValue);
+            WritableArray nativeArray = Arguments.fromList(Arrays.asList(installments));
+            promise.resolve(nativeArray);
+        }
+        catch(Exception e){
+            promise.reject(e);
+        }
+    }
+
 }
