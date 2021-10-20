@@ -1,0 +1,20 @@
+com/reactlibrary/PlugPagServiceModule.java
+ com.reactlibrary.PlugPagServiceModule
+ com.reactlibrary.PlugPagServiceModule$1
+ com.reactlibrary.PlugPagServiceModule$2
+ com.reactlibrary.PlugPagServiceModule$3
+ com.reactlibrary.PlugPagServiceModule$4
+ com.reactlibrary.PlugPagServiceModule$5
+ com.reactlibrary.PlugPagServiceModule$6
+ com.reactlibrary.PlugPagServiceModule$7
+ com.reactlibrary.PlugPagServiceModule$7$1
+com/reactlibrary/PlugPagWrapper.java
+ com.reactlibrary.PlugPagWrapper
+com/reactlibrary/BuildConfig.java
+ com.reactlibrary.BuildConfig
+com/reactlibrary/JsonParseUtils.java
+ com.reactlibrary.JsonParseUtils
+com/reactlibrary/PlugPagAppIdentificationWrapper.java
+ com.reactlibrary.PlugPagAppIdentificationWrapper
+com/reactlibrary/PlugPagServicePackage.java
+ com.reactlibrary.PlugPagServicePackage
