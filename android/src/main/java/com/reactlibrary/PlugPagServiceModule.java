@@ -212,6 +212,7 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
                     map.putString("message", transactionResult.getMessage());
 
                     map.putString("errorCode", transactionResult.getErrorCode());
+                    map.putString("cardApplication", transactionResult.getCardApplication());
 
                     promise.resolve(map);
                 }
@@ -294,6 +295,8 @@ public class PlugPagServiceModule extends ReactContextBaseJavaModule {
                     map.putString("cardApplication", transactionResult.getCardApplication());
                     map.putString("cardBrand", transactionResult.getCardBrand());
                     map.putString("errorCode", transactionResult.getErrorCode());
+                    map.putString("cardHash", transactionResult.getCardHash());
+                    map.putString("holder", transactionResult.getHolder());
 
                     promise.resolve(map);
                 }
